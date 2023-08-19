@@ -4,8 +4,11 @@
 import requests
 import sys
 
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: {} <employee_id>".format(sys.argv[0]))
+        return
 
-if __name__ == '__main__':
     employeeId = sys.argv[1]
     baseUrl = "https://jsonplaceholder.typicode.com/users"
     url = baseUrl + "/" + employeeId
@@ -16,16 +19,14 @@ if __name__ == '__main__':
     todoUrl = url + "/todos"
     response = requests.get(todoUrl)
     tasks = response.json()
-    done = 0
-    done_tasks = []
-
-    for task in tasks:
-        if task.get('completed'):
-            done_tasks.append(task)
-            done += 1
+    done_tasks = [task for task in tasks if task.get('completed')]
+    done = len(done_tasks)
 
     print("Employee {} is done with tasks({}/{}):"
           .format(employeeName, done, len(tasks)))
 
     for task in done_tasks:
-        print("\t {}".format(task.get('title')))
+        print("\t{}".format(task.get('title')))
+
+if __name__ == '__main__':
+    main()
